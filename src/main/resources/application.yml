@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+spring:
+    datasource:
+        name: print
+        url: jdbc:mysql://127.0.0.1:3306/safelocate?characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+        username: root
+        password: 1998
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    freemarker:
+        cache: false
+        request-context-attribute: request
+        template-loader-path: classpath:/templates
+        suffix: .html
+        prefix: /html/
+
