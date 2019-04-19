@@ -8,5 +8,5 @@ package com.mine.ide.test;
  */
 
 public class ProjectTest {
-    
+
 }

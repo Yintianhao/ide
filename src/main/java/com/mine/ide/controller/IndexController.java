@@ -2,6 +2,7 @@ package com.mine.ide.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * @author yintianhao
@@ -11,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class IndexController {
 
-    @RequestMapping("/")
+    @RequestMapping(value = "/run")
     public String showIde(){
-        return "test";
+        return "host";
     }
 }
