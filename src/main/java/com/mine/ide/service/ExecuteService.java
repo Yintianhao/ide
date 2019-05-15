@@ -1,13 +1,17 @@
 package com.mine.ide.service;
 
+import com.mine.ide.util.Compiler;
 import org.springframework.stereotype.Service;
 
+import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
 
 /**
  * @author yintianhao
@@ -35,8 +39,22 @@ public class ExecuteService {
         DiagnosticCollector<JavaFileObject> compilerCollector =
                 new DiagnosticCollector<>();
         //编译源代码 生成字节码
-        byte[] classBytes ;
-        return "还没写完，先学一会正则表达式";
+        byte[] classBytes = Compiler.compile(sourceCode,compilerCollector);
+        if(classBytes==null){
+            //获取编译错误信息
+            List<Diagnostic<?extends JavaFileObject>> complieError
+                    = compilerCollector.getDiagnostics();
+            //错误信息
+            StringBuilder errorInfo = new StringBuilder();
+            for (Diagnostic diagnostic:complieError){
+                errorInfo.append("Compile error at");
+                errorInfo.append(diagnostic.getLineNumber());
+                errorInfo.append(".");
+                errorInfo.append(System.lineSeparator());
+            }
+            return errorInfo.toString();
+        }
+        return "";
     }
 
 }

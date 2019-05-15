@@ -6,63 +6,62 @@
     <link href="https://cdn.bootcss.com/bttn.css/0.2.4/bttn.css" rel="stylesheet">
 <link href="https://cdn.bootcss.com/bulma/0.7.4/css/bulma.css" rel="stylesheet">
 </head>
-<script type="text/javascript">
-    var input = document.getElementById("input");
-    str = "    ";
-    if (input.addEventListener){
-        input.addEventListener("keydown",keyHandler,false);
-    }else if (input.attachEvent){
-        input.attachEvent("onkeydown",keyHandler);
-    }
-    function keyHandler(e) {
-        var tabKey = 9;
-        if (e.keyCode==tabKey){
-            insertText(input,str);
-            if (e.preventDefault) {
-                e.preventDefault();
-            }
-        }
-    }
-    function insertText(obj,str) {
-        if (document.selection){
 
-            var sel = document.selection.createRange();
-            sel.text = str;
-
-        }else if(typeof obj.selectionStart==='number'
-            &&typeof obj.selectionEnd==='number'){
-
-            var startPosition = obj.selectionStart;
-            var endPosition = obj.selectionEnd;
-            var cursorPosition = startPosition;
-            var tmpStr = obj.value;
-            obj.value = tmpStr.substring(0,startPosition)
-                +str
-                +tmpStr.substring(endPosition,tmpStr,tmpStr.length);
-            cursorPosition += str.length;
-            obj.selectionStart = obj.selectionEnd = cursorPosition;
-        }else{
-            obj.value += str;
-        }
-    }
-</script>
 <body>
 <div style="width: 100%;text-align: center">
     <form action="/run" method="post">
         <div class="control" style="width: 70%;margin: 10px auto">
-            输入代码：
             <textarea class="text-area is-success" id="input" name="sourceCode" rows="15" cols="180">
-                $!{lastSourceCode}
+                ${lastSourceCode}
             </textarea>
         </div>
         <input class="bttn-simple bttn-md bttn-primary" type="submit" value="运行">
+        <script type="text/javascript">
+            var input = document.getElementById("input");//获取input控件
+            str = "    ";//tab键，四个空格
+            if (input.addEventListener){
+                input.addEventListener("keydown",keyHandler,false);
+            }else if (input.attachEvent){
+                input.attachEvent("onkeydown",keyHandler);
+            }
+            function keyHandler(e) {
+                var tabKey = 9;//tab键的keyCode
+                if (e.keyCode==tabKey){
+                    insertText(input,str);//插入
+                    if (e.preventDefault) {
+                        e.preventDefault();
+                    }
+                }
+            }
+            function insertText(obj,str) {
+                //在光标处插入文本
+                if (document.selection){
+                    var sel = document.selection
+                        .createRange();//创建range对象
+                    sel.text = str;
 
+                }else if(typeof obj.selectionStart==='number'
+                    &&typeof obj.selectionEnd==='number'){
+                    var startPosition = obj.selectionStart;
+                    var endPosition = obj.selectionEnd;
+                    var cursorPosition = startPosition;
+                    var tmpStr = obj.value;
+                    obj.value = tmpStr.substring(0,startPosition)
+                        +str
+                        +tmpStr.substring(endPosition,tmpStr,tmpStr.length);
+                    cursorPosition += str.length;
+                    obj.selectionStart = obj.selectionEnd = cursorPosition;
+                }else{
+                    obj.value += str;
+                }
+            }
+        </script>
     </form>
 </div>
 <div id="showRunResult" style="border: 1px solid;
 padding: 3px;width: 70%;margin-top: 10px;
 position: absolute;left: 50%;transform: translate(-50%);">
-    $!{runResult}}
+    ${runResult}
 </div>
 </body>
 </html>
