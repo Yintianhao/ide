@@ -2,13 +2,56 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>员工注册</title>
 </head>
+<script lang="javascript">
+    function checkInfo() {
+        var id = document.getElementById("id").value;
+        var name = document.getElementById("name").value;
+        var job = document.getElementById("job").value;
+        var date = document.getElementById("date").value;
+        var salary = document.getElementById("salary").value;
+        var prize = document.getElementById("prize").value;
+        console.log("id-"+id.toString());
+        console.log("name-"+name.toString());
+        console.log("job-"+job.toString());
+        console.log("date-"+date.toString());
+        console.log("salary-"+salary.toString());
+        console.log("prize-"+prize.toString());
+        if (name=="")
+            alert("姓名不能为空");
+        if(job=="")
+            alert("工作不能为空");
+        if (!/^\d{4}\-\d\d?\-\d\d?/.test(date)) {
+            alert("日期格式不符合规定");
+        }
+        var array = date.replace(/\-0/g, "-").split("-");
+        var year = parseInt(array[0]);
+        var month = parseInt(array[1]) - 1;
+        var day = parseInt(array[2]);
+        var date = new Date(year, month, day);
+        if(date.getFullYear()!= year ||
+            date.getMonth() != month ||
+            date.getDate() != day){
+            alert("年月日请符合要求")
+        }
+        if (salary.toString().indexOf(".")<0)
+            alert("薪水必须为小数");
+        if (prize.toString().indexOf(".")<0)
+            alert("奖金必须是小数");
+
+
+    }
+</script>
 <body>
-<form action="/login" method="post">
-    <input type="number" name="userId"><br>
-    <input type="number" name="password">
-    <input type="submit" value="登录">
+<form action="/check" method="post">
+    员工编号：<input type="number" id="id"><br>
+    员工姓名：<input type="text" id="name"><br>
+    员工工作：<input type="text" id="job"><br>
+    雇佣日期：<input type="date" id="date"><br>
+    基本工资：<input type="number" id="salary"><br>
+    奖金：<input type="number" id="prize"><br>
+    <input type="button" id="check" value="验证" onclick="checkInfo()">
 </form>
 </body>
 </html>

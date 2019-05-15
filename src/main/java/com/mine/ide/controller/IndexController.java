@@ -24,20 +24,11 @@ public class IndexController {
 
         //.addAttribute("lastSourceCode",defaultSourceCode);
         //model.addAttribute("runResult","");
-        return "index";
+        return "test";
     }
-    @RequestMapping("/login")
-    public String login(@RequestParam("userId")String id,
-                        @RequestParam("password")String password,
-                        Model model){
-        if (id.equals("123")&&password.equals("123")) {
-            model.addAttribute("loginResult","登录成功");
-            return "result";
-        }
-        else {
-            model.addAttribute("loginResult","登录失败");
-            return "result";
-        }
+    @RequestMapping("/check")
+    public String login(){
+        return "test";
 
     }
 
