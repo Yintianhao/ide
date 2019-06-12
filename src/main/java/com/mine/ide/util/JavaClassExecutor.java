@@ -1,5 +1,8 @@
 package com.mine.ide.util;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 /**
  * @author yintianhao
  * @createTime 2019515 17:30
@@ -14,6 +17,24 @@ package com.mine.ide.util;
  */
 public class JavaClassExecutor {
     public static String execute(byte[] classByte){
-        return "";
+        ClassModifier modifier = new ClassModifier(classByte);
+        //调用ClassModifier的方法进行修改
+        byte[] modifiedByte = modifier.modifyUTF8Constant("java/lang/System","com/mine/ide/util/HackSystem");
+        HotSwapClassLoader classLoader = new HotSwapClassLoader();
+        Class classes = classLoader.loadClass(classByte);
+        try {
+            Method mainMethod = classes.getMethod("main",new Class[]{String[].class});
+            mainMethod.invoke(null,new String[]{null});
+        }catch (NoSuchMethodException e){
+            e.printStackTrace();
+        }catch (IllegalAccessException e){
+            e.printStackTrace();
+        }catch (InvocationTargetException e) {
+            //将异常信息返回给前端
+            e.getCause().printStackTrace(HackSystem.err);
+        }
+        String back = HackSystem.getBufferString();
+        HackSystem.closeBuffer();
+        return back;
     }
 }

@@ -1,16 +1,14 @@
 package com.mine.ide.service;
 
 import com.mine.ide.util.Compiler;
+import com.mine.ide.util.JavaClassExecutor;
 import org.springframework.stereotype.Service;
 
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 
 /**
@@ -35,6 +33,7 @@ public class ExecuteService {
     /*除了模板代码之外没有其他输入代码*/
     private static final String NO_INPUT = "没有输入";
     public String execute(String sourceCode){
+       // print(sourceCode);
         //运行结果收集
         DiagnosticCollector<JavaFileObject> compilerCollector =
                 new DiagnosticCollector<>();
@@ -42,11 +41,11 @@ public class ExecuteService {
         byte[] classBytes = Compiler.compile(sourceCode,compilerCollector);
         if(classBytes==null){
             //获取编译错误信息
-            List<Diagnostic<?extends JavaFileObject>> complieError
+            List<Diagnostic<?extends JavaFileObject>> compileError
                     = compilerCollector.getDiagnostics();
             //错误信息
             StringBuilder errorInfo = new StringBuilder();
-            for (Diagnostic diagnostic:complieError){
+            for (Diagnostic diagnostic: compileError){
                 errorInfo.append("Compile error at");
                 errorInfo.append(diagnostic.getLineNumber());
                 errorInfo.append(".");
@@ -54,7 +53,33 @@ public class ExecuteService {
             }
             return errorInfo.toString();
         }
-        return "";
+        Callable<String> runTask = new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return JavaClassExecutor.execute(classBytes);
+            }
+        };
+        Future<String> res = null;
+        try {
+            res = pool.submit(runTask);
+        }catch (RejectedExecutionException e){
+            return WAIT_WARNING;
+        }
+        String runResult;
+        try {
+            runResult = res.get(RUN_TIME_LIMITED,TimeUnit.SECONDS);
+        }catch (InterruptedException e){
+            runResult = "Program interrupted";
+        }catch (ExecutionException e){
+            runResult = e.getCause().getMessage();
+        }catch (TimeoutException e){
+            runResult = "Time limited exceeded";
+        }finally {
+            res.cancel(true);
+        }
+        return runResult !=null?runResult:NO_INPUT;
     }
-
+    private void print(String str){
+        System.out.println(str);
+    }
 }
