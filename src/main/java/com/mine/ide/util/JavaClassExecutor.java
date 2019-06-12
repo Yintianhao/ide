@@ -21,7 +21,7 @@ public class JavaClassExecutor {
         //调用ClassModifier的方法进行修改
         byte[] modifiedByte = modifier.modifyUTF8Constant("java/lang/System","com/mine/ide/util/HackSystem");
         HotSwapClassLoader classLoader = new HotSwapClassLoader();
-        Class classes = classLoader.loadClass(classByte);
+        Class classes = classLoader.loadClass(modifiedByte);
         try {
             Method mainMethod = classes.getMethod("main",new Class[]{String[].class});
             mainMethod.invoke(null,new String[]{null});
@@ -31,6 +31,7 @@ public class JavaClassExecutor {
             e.printStackTrace();
         }catch (InvocationTargetException e) {
             //将异常信息返回给前端
+            //System.out.println("Error");
             e.getCause().printStackTrace(HackSystem.err);
         }
         String back = HackSystem.getBufferString();

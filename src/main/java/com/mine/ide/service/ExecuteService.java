@@ -33,7 +33,6 @@ public class ExecuteService {
     /*除了模板代码之外没有其他输入代码*/
     private static final String NO_INPUT = "没有输入";
     public String execute(String sourceCode){
-       // print(sourceCode);
         //运行结果收集
         DiagnosticCollector<JavaFileObject> compilerCollector =
                 new DiagnosticCollector<>();
@@ -46,7 +45,7 @@ public class ExecuteService {
             //错误信息
             StringBuilder errorInfo = new StringBuilder();
             for (Diagnostic diagnostic: compileError){
-                errorInfo.append("Compile error at");
+                errorInfo.append("Compile error at line ");
                 errorInfo.append(diagnostic.getLineNumber());
                 errorInfo.append(".");
                 errorInfo.append(System.lineSeparator());
@@ -78,8 +77,5 @@ public class ExecuteService {
             res.cancel(true);
         }
         return runResult !=null?runResult:NO_INPUT;
-    }
-    private void print(String str){
-        System.out.println(str);
     }
 }

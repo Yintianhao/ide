@@ -15,10 +15,11 @@ public class ProjectTest {
     public void run(){
        String code = "public class HelloWorld {\n" +
                "    public static void main(String []args) {\n" +
-               "       System.out.println(\" \");\n" +
+               "       System.out.println(1+1);\n" +
                "    }\n" +
                "}";
         ExecuteService service = new ExecuteService();
+        //service.execute(code);
         print(service.execute(code));
     }
     private void print(String str){

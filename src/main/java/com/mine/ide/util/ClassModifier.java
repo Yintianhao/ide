@@ -41,7 +41,7 @@ public class ClassModifier {
     public byte[] modifyUTF8Constant(String oldStr,String newStr){
         int cpc = getConstantPoolCount();//获取常量池的元素个数
         int offSet = CONSTANT_POOL_COUNT_INDEX + u2;//真正的常量的起始地址,常量池之后的字节
-        for(int i = 0;i < cpc;i++){
+        for(int i = 1;i < cpc;i++){
             int tag = ByteUtil.byteToInt(classByte,offSet,u1);//取真实起始地址后一个字节并转化为int
             if(tag==CONSTANT_UTF8_INFO){
                 //CONSTANT_UTF_INFO的结构，第一项一个字节，即+u1，而长度是2
@@ -50,12 +50,13 @@ public class ClassModifier {
                 String str = ByteUtil.byteToString(classByte,offSet,len);
                 if (str.equals(oldStr)){
                     byte[] strReplaceBytes = ByteUtil.stringToBytes(newStr);
-                    byte[] intReplaceBytes = ByteUtil.inToBytes(strReplaceBytes.length,u2);
+                    byte[] intReplaceBytes = ByteUtil.intToBytes(strReplaceBytes.length,u2);
                     //替换成新的字符串的长度
                     //byte[] oldBytes,int offset,int len,byte[] replaceBytes
                     classByte = ByteUtil.byteReplace(classByte,offSet-u2,u2,intReplaceBytes);
                     //替换字符本身
                     classByte = ByteUtil.byteReplace(classByte,offSet,len,strReplaceBytes);
+                    return classByte;
                 }else {
                     offSet = offSet + len;
                 }
