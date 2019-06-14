@@ -29,9 +29,9 @@ public class ExecuteService {
             TimeUnit.SECONDS,
             new ArrayBlockingQueue<Runnable>(N_THREAD));
     /*超时警告*/
-    private static final String WAIT_WARNING = "服务器繁忙，请稍后提交";
+    private static final String WAIT_WARNING = "Server busy";
     /*除了模板代码之外没有其他输入代码*/
-    private static final String NO_INPUT = "没有输入";
+    private static final String NO_INPUT = "No input";
     public String execute(String sourceCode){
         //运行结果收集
         DiagnosticCollector<JavaFileObject> compilerCollector =
