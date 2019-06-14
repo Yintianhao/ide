@@ -6,7 +6,7 @@ spring:
         name: print
         url: jdbc:mysql://127.0.0.1:3306/safelocate?characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
         username: root
-        password: 1998
+        password: ****
         driver-class-name: com.mysql.cj.jdbc.Driver
     freemarker:
         cache: false
