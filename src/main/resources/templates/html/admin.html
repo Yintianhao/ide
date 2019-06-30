@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" style="background-color: azure;">
+<head>
+    <meta charset="UTF-8">
+    <title>个人代码提交记录</title>
+</head>
+<body>
+<table border="1" style="width: 100%">
+    <tr>
+        <th>账号</th>
+        <th>时间</th>
+        <th>语言</th>
+        <th>源代码</th>
+    </tr>
+    <#list runRecords as record>
+    <tr>
+        <td>${record.getUserid()}</td>
+        <td>${record.getTimedetail()}</td>
+        <td>${record.getLanguage()}</td>
+        <td>${record.getCode()}</td>
+    </tr>
+    </#list>
+<!--FreeMarker-->
+</table>
+</body>
+</html>

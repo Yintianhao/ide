@@ -4,7 +4,7 @@ server:
 spring:
     datasource:
         name: print
-        url: jdbc:mysql://127.0.0.1:3306/safelocate?characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+        url: jdbc:mysql://127.0.0.1:3306/java_web_exam?characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
         username: root
         password: 1998
         driver-class-name: com.mysql.cj.jdbc.Driver
@@ -14,4 +14,19 @@ spring:
         template-loader-path: classpath:/templates
         suffix: .html
         prefix: /html/
+    main:
+      allow-bean-definition-overriding: true
+    redis:
+      port: 6379
+      host: localhost
+      jedis:
+        pool:
+          max-active: 8
+          min-idle: 0
+          max-idle: 8
+          max-wait: -1
+      database: 0
+
+
+
 

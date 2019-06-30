@@ -1,58 +1,73 @@
 package com.mine.ide.controller;
-
-import com.mine.ide.service.ExecuteService;
-import com.mine.ide.test.ProjectTest;
+import com.mine.ide.entity.RunRecord;
+import com.mine.ide.service.implement.ExecuteJavaService;
+import com.mine.ide.service.interfaces.UserService;
+import com.sun.org.apache.xpath.internal.operations.Mod;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.concurrent.ExecutorService;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
-
 /**
  * @author yintianhao
  * @createTime 20190417 14:42
- * @description 测试控制器
+ * @description
  */
 @Controller
 public class IndexController {
-
     private static String defaultSourceCode = "\n"+"public class Run {\n"
             + "         public static void main(String[] args) {\n"
             + "             \n"
             + "         }\n"
             +       "}";
-    private AtomicInteger count = new AtomicInteger(523);
+    private List<RunRecord> runRecords = new ArrayList<>();
     @Autowired
-    ExecuteService executorService;
+    ExecuteJavaService executorService;
+    @Autowired
+    UserService userService;
+    private static final Logger log = Logger.getLogger(IndexController.class);
+
     @RequestMapping("/")
-    public String home(){
-        count.incrementAndGet();
-        System.out.println("第"+count.get()+"位访客");
-        return "home";
+    public String home(Model model, HttpServletRequest request){
+        Cookie[] cookies = request.getCookies();
+        Cookie id = null;
+        Cookie pd = null;
+        if (cookies!=null){
+            for (Cookie cookie:cookies){
+                log.info("cookie name "+cookie.getName());
+                if (cookie.getName().equals("userid"))
+                    id = cookie;
+                if (cookie.getName().equals("password"))
+                    pd = cookie;
+            }
+        }
+        try {
+            if (userService.login(id.getValue(),pd.getValue())){
+                model.addAttribute("lastSourceCode",defaultSourceCode);
+                model.addAttribute("runResult","");
+                return "java";
+            }
+        }catch (NullPointerException e){
+            log.info("null pointer");
+        }
+        return "login";
     }
-    @ResponseBody
-    @RequestMapping("/count")
-    public String getGuestCount(){
-        return count.get()+"";
-    }
+
     @RequestMapping("/ide")
     public String defaultPage(Model model){
         model.addAttribute("lastSourceCode",defaultSourceCode);
         model.addAttribute("runResult","");
-        return "host";
+        return "java";
     }
-    @RequestMapping(value = "/run",method = RequestMethod.POST)
-    public String showIde(@RequestParam("sourceCode") String sourceCode,Model model){
-        ProjectTest.print(System.getProperty("java.home"));
-        model.addAttribute("lastSourceCode",sourceCode);
-        model.addAttribute("runResult",executorService.execute(sourceCode).replaceAll(System.lineSeparator(),"<br/>"));
-        return "host";
+    @RequestMapping("/toJava")
+    public String toJava(Model model){
+        model.addAttribute("lastSourceCode",defaultSourceCode);
+        return "java";
     }
-
 }

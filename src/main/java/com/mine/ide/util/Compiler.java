@@ -30,13 +30,14 @@ public class Compiler {
     private static Pattern CLASS_PATTERN = Pattern.compile("class\\s+([$_a-zA-Z][$_a-zA-Z0-9]*)\\s*");
     public static byte[] compile(String sourceCode,
                                  DiagnosticCollector<JavaFileObject> collector){
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();//获得javacompile实例
+        //获得javacompile实例
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         JavaFileManager javaFileManager = new TmpJavaFileManager(
                 compiler.getStandardFileManager(collector,null,null)
         );
         //根据pattern中的模式从字符串中匹配类名
         Matcher matcher = CLASS_PATTERN.matcher(sourceCode);
-        String className;//类名
+        String className ;//类名
         if(matcher.find()){
             className  = matcher.group(1);
         }else {

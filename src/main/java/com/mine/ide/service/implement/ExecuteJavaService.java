@@ -1,5 +1,4 @@
-package com.mine.ide.service;
-
+package com.mine.ide.service.implement;
 import com.mine.ide.util.Compiler;
 import com.mine.ide.util.JavaClassExecutor;
 import org.springframework.stereotype.Service;
@@ -9,17 +8,15 @@ import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 import java.util.List;
 import java.util.concurrent.*;
-
-
 /**
  * @author yintianhao
  * @createTime 20190424 14:19
  * @description 执行代码服务
  */
 @Service
-public class ExecuteService {
+public class ExecuteJavaService {
     /*运行时间限制 15S*/
-    private static final int RUN_TIME_LIMITED = 15;
+    private static final int RUN_TIME_LIMITED = 5;
     /*线程池线程数*/
     private static final int N_THREAD = 5;
     /*执行传过来的代码的线程池*/
@@ -32,6 +29,7 @@ public class ExecuteService {
     private static final String WAIT_WARNING = "Server busy";
     /*除了模板代码之外没有其他输入代码*/
     private static final String NO_INPUT = "No input";
+
     public String execute(String sourceCode){
         //运行结果收集
         DiagnosticCollector<JavaFileObject> compilerCollector =

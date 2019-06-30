@@ -11,7 +11,7 @@ public class IdeApplication extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(IdeApplication.class, args);
     }
-    @Override//为了打包springboot项目
+    @Override//为了打包Spring boot项目
     protected SpringApplicationBuilder configure(
             SpringApplicationBuilder builder) {
         return builder.sources(this.getClass());
